@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # crypto-rate-limiter-bypass-tester
 Tests for vulnerabilities in rate limiting implementations related to cryptographic operations (e.g., signature verification, key derivation) that could lead to resource exhaustion. - Focused on Basic cryptographic operations
 
