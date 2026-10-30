@@ -1,12 +1,10 @@
 import argparse
 import logging
+import sys
 import time
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.primitives import asymmetric
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat, PrivateFormat, NoEncryption
+from cryptography.hazmat.primitives.asymmetric import ec, padding as asym_padding, rsa
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
@@ -54,9 +52,11 @@ def test_hmac(iterations, key_size):
         duration = end_time - start_time
         logging.info(f"HMAC completed in {duration:.4f} seconds for {iterations} iterations.")
         logging.info(f"Average time per HMAC operation: {(duration/iterations):.6f} seconds")
+        return True
 
     except Exception as e:
         logging.error(f"Error during HMAC testing: {e}")
+        return False
 
 
 def test_hkdf(iterations, hkdf_length):
@@ -83,9 +83,11 @@ def test_hkdf(iterations, hkdf_length):
         duration = end_time - start_time
         logging.info(f"HKDF completed in {duration:.4f} seconds for {iterations} iterations.")
         logging.info(f"Average time per HKDF operation: {(duration/iterations):.6f} seconds")
+        return True
 
     except Exception as e:
         logging.error(f"Error during HKDF testing: {e}")
+        return False
 
 
 def test_signature(iterations, signature_algorithm):
@@ -93,15 +95,22 @@ def test_signature(iterations, signature_algorithm):
     Tests signature generation/verification for rate limiting vulnerabilities.
     """
     try:
+        # RSA and ECDSA do not take the same sign() arguments: ECDSA
+        # takes its algorithm object alone, RSA takes a padding object
+        # and a hash. One shared variable for both shapes is what made
+        # the RSA path fail even after PSS was named correctly, so
+        # each branch stores the full argument tuple for sign/verify.
         if signature_algorithm == "ecdsa":
             private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
             public_key = private_key.public_key()
-            algorithm = asymmetric.ec.ECDSA(hashes.SHA256())
+            sign_params = (ec.ECDSA(hashes.SHA256()),)
 
         elif signature_algorithm == "rsa":
-            private_key = asymmetric.rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+            private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
             public_key = private_key.public_key()
-            algorithm = asymmetric.rsa.PSS(mgf=asymmetric.rsa.MGF1(hashes.SHA256()), salt_length=asymmetric.rsa.PSS.MAX_LENGTH)
+            # PSS lives in the asymmetric padding module, not on the
+            # rsa module; naming it through rsa failed on every RSA run.
+            sign_params = (asym_padding.PSS(mgf=asym_padding.MGF1(hashes.SHA256()), salt_length=asym_padding.PSS.MAX_LENGTH), hashes.SHA256())
 
         else:
             raise ValueError("Invalid signature algorithm.")
@@ -110,16 +119,18 @@ def test_signature(iterations, signature_algorithm):
 
         start_time = time.time()
         for i in range(iterations):
-            signature = private_key.sign(message, algorithm)
-            public_key.verify(signature, message, algorithm)
+            signature = private_key.sign(message, *sign_params)
+            public_key.verify(signature, message, *sign_params)
 
         end_time = time.time()
         duration = end_time - start_time
         logging.info(f"Signature ({signature_algorithm}) completed in {duration:.4f} seconds for {iterations} iterations.")
         logging.info(f"Average time per Signature operation: {(duration/iterations):.6f} seconds")
+        return True
 
     except Exception as e:
         logging.error(f"Error during Signature ({signature_algorithm}) testing: {e}")
+        return False
 
 
 
@@ -132,25 +143,28 @@ def test_aes(iterations, key_size, aes_mode):
         plaintext = b"This is a test message" * 16  # Ensure message is long enough
 
         if aes_mode == "cbc":
-            iv = os.urandom(16)
-            cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
             padder = padding.PKCS7(algorithms.AES.block_size).padder()
             padded_data = padder.update(plaintext) + padder.finalize()
-            encryptor = cipher.encryptor()
-            decryptor = cipher.decryptor()
         elif aes_mode == "ctr":
-            iv = os.urandom(16)
-            cipher = Cipher(algorithms.AES(key), modes.CTR(iv), backend=default_backend())
-            encryptor = cipher.encryptor()
-            decryptor = cipher.decryptor()
             padded_data = plaintext  # CTR doesn't require padding
         else:
             raise ValueError("Invalid AES mode.")
 
-
         start_time = time.time()
         for i in range(iterations):
+            # A cipher context dies at finalize(), so one context cannot
+            # serve the loop: the old code built the encryptor once and
+            # every run past the first iteration failed with "Context
+            # was already finalized", which the timing then reported as
+            # an error after iteration one. A fresh context per pass is
+            # also the honest thing to time, since real callers build
+            # one per message. The IV stays fixed across passes so the
+            # decrypt step still matches the encrypt step in CBC.
+            iv = os.urandom(16) if i == 0 else iv
+            mode = modes.CBC(iv) if aes_mode == "cbc" else modes.CTR(iv)
+            encryptor = Cipher(algorithms.AES(key), mode, backend=default_backend()).encryptor()
             ciphertext = encryptor.update(padded_data) + encryptor.finalize()
+            decryptor = Cipher(algorithms.AES(key), mode, backend=default_backend()).decryptor()
             decrypted_text = decryptor.update(ciphertext) + decryptor.finalize()
 
 
@@ -158,28 +172,51 @@ def test_aes(iterations, key_size, aes_mode):
         duration = end_time - start_time
         logging.info(f"AES ({aes_mode}) completed in {duration:.4f} seconds for {iterations} iterations.")
         logging.info(f"Average time per AES operation: {(duration/iterations):.6f} seconds")
+        return True
 
     except Exception as e:
         logging.error(f"Error during AES ({aes_mode}) testing: {e}")
+        return False
 
 
 def main():
     """
     Main function to parse arguments and run the selected test.
+    Returns 0 when the selected test completes, 1 when it fails or the
+    arguments cannot produce a meaningful run.
     """
     args = setup_argparse()
 
+    # Guard the shapes that used to produce a fake completion: zero
+    # iterations divided by zero in the average, a zero HKDF length
+    # derived an empty key and still logged success, and an AES key
+    # size AES cannot use failed inside the timed section.
+    if args.iterations < 1:
+        logging.error("Iterations must be at least 1.")
+        return 1
+    if args.hkdf_length < 1:
+        logging.error("HKDF length must be at least 1.")
+        return 1
+    if args.operation == "aes" and args.key_size not in (16, 24, 32):
+        logging.error("AES key size must be 16, 24, or 32 bytes.")
+        return 1
+    if args.operation == "hmac" and args.key_size < 1:
+        logging.error("Key size must be at least 1 byte.")
+        return 1
+
     if args.operation == "hmac":
-        test_hmac(args.iterations, args.key_size)
+        ok = test_hmac(args.iterations, args.key_size)
     elif args.operation == "hkdf":
-        test_hkdf(args.iterations, args.hkdf_length)
+        ok = test_hkdf(args.iterations, args.hkdf_length)
     elif args.operation == "signature":
-        test_signature(args.iterations, args.signature_algorithm)
+        ok = test_signature(args.iterations, args.signature_algorithm)
     elif args.operation == "aes":
-        test_aes(args.iterations, args.key_size, args.aes_mode)
+        ok = test_aes(args.iterations, args.key_size, args.aes_mode)
     else:
         logging.error("Invalid operation selected.")
+        return 1
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
