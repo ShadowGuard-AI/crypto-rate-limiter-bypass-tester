@@ -44,6 +44,9 @@ def test_hmac(iterations, key_size):
         start_time = time.time()
 
         for i in range(iterations):
+            # A fresh HMAC object per pass because finalize() spends
+            # the one above it. Building it inside the timed loop is
+            # also what a caller making many separate calls pays.
             h = hmac.HMAC(key, hashes.SHA256(), backend=default_backend())
             h.update(message)
             h.finalize()
@@ -70,6 +73,11 @@ def test_hkdf(iterations, hkdf_length):
 
         start_time = time.time()
         for i in range(iterations):
+            # Salt and input keying material stay fixed across passes,
+            # and the HKDF object is rebuilt each time because derive()
+            # may only be called once on an instance. Every pass is the
+            # same derivation, so the average is a repeat cost, not the
+            # cost of deriving different keys.
             hkdf = HKDF(
                 algorithm=hashes.SHA256(),
                 length=hkdf_length,
@@ -187,6 +195,10 @@ def main():
     """
     args = setup_argparse()
 
+    # Nothing in this tool sends a request anywhere. Each test is a
+    # local timing loop over the library, so what a run measures is how
+    # fast this machine repeats an operation. That is the input a rate
+    # limit decision would be based on, not a test of a live limiter.
     # Guard the shapes that used to produce a fake completion: zero
     # iterations divided by zero in the average, a zero HKDF length
     # derived an empty key and still logged success, and an AES key
