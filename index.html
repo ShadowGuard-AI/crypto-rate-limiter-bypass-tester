@@ -1,164 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto Rate Limiter Bypass Tester: what it is, how it runs, where it stops</title>
-<meta name="description" content="Each operation is timed over the requested iterations and the average is logged. The exit code is 0 when the selected operation completes and 1 when i">
-<style>
-:root {
-  --bg: #160e1e; --panel: #24162e; --ink: #f0eaf4;
-  --mut: #301d3e;
-  --acc: #e874b2; --acc2: #74c8e8;
-  --line: #24162e;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.55; }
-code, pre, .mono { font-family: 'Consolas', monospace; }
-a { color: var(--acc2); }
-.hero { padding: 3rem 6vw 1rem; }
-.hero img.banner { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; }
-.logo { width: 92px; height: 92px; border-radius: 18px;
-  border: 1px solid var(--line); }
-h1 { font-size: 2.4rem; margin: 0.4em 0 0.1em; }
-h2 { border-bottom: 2px solid var(--acc); padding-bottom: 0.2em;
-  margin-top: 2em; }
-.lede { font-size: 1.15rem; max-width: 62ch; }
-main { padding: 0 6vw 3rem; max-width: 1180px; margin: 0 auto; }
-.grid { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 12px; padding: 1rem 1.2rem; }
-.card.pop { animation: rise 0.7s ease both; }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; } }
-pre.code { background: #101014; color: #e8e6df; padding: 1rem 1.2rem;
-  border-radius: 12px; overflow-x: auto; font-size: 0.86rem;
-  border-left: 5px solid var(--acc); }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; }
-.shots { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.shots img { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; background: #f4f1e8; }
-footer { padding: 2rem 6vw; border-top: 1px solid var(--line);
-  color: var(--mut); }
-.rail { display: flex; gap: 1.2rem; align-items: flex-start; }
-.rail nav { position: sticky; top: 1rem; min-width: 180px; }
-@media (max-width: 760px) { .rail { flex-direction: column; }
-  .rail nav { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .card.pop { animation: none; } * { scroll-behavior: auto; } }
-</style>
-</head>
-<body class="layout-grid">
-<!-- This page exists for crypto-rate-limiter-bypass-tester alone: the layout (console-grid),
-     the colors, and the type were picked for this project, not
-     shared with the other project pages. The code block below is
-     copied from the file it names, line for line. If it looks
-     plain, that is because the project is plain, and I would
-     rather the page match the project than dress it up. The one
-     thing I will not do here is oversell: what this project does
-     not do is stated on the page, not hidden from it. -->
-<header class="hero">
-  <img class="logo" src="assets/logo.png" alt="Crypto Rate Limiter Bypass Tester logo">
-  <img class="banner" src="assets/banner.png" alt="">
-  <h1>Crypto Rate Limiter Bypass Tester</h1>
-  <p class="mono"><a href="https://github.com/ShadowGuard-AI/crypto-rate-limiter-bypass-tester">github.com/ShadowGuard-AI/crypto-rate-limiter-bypass-tester</a></p>
-</header>
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>crypto-rate-limiter-bypass-tester: Astronomer's Red Torch Etiquette</title>
+<style>@font-face{font-family:Disp;src:url("fonts/Blaka.ttf")}@font-face{font-family:Text;src:url("fonts/Archivo.ttf")}
+body{background:#ece7d4;font-family:Text,sans-serif;color:#1f3a3a;margin:0}main{max-width:920px;margin:0 auto;padding:28px}h1,h2,h3{font-family:Disp,serif;color:#f3ecd8;background:#3b2e5a;padding:6px 12px}section{background:#f7f3e2;padding:18px 22px;margin:16px 0;border:1px solid #c0c6cc}img{max-width:100%}button{background:#3b2e5a;color:#f3ecd8;border:2px solid #1f4a4a;padding:10px 14px;margin:4px;font-family:Disp,serif}pre{white-space:pre-wrap;font-family:Text,sans-serif}.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#8e1f1f;margin-right:8px}</style></head><body><main>
+<img src="intro-banner.png" alt="Arrival in darkness: grass and the legs of a table near, telescope shapes and seated observers and an unlit kettle further in, a dense star field thinning towards the horizon far off, with no lettering and no torch lit"><h1>crypto-rate-limiter-bypass-tester: Astronomer's Red Torch Etiquette</h1>
+<p>Theme: Astronomer's Red Torch Etiquette. A night watch log, entries in sequence down one column, red admitted only as small filter discs beside entry headings. Headings in Blaka, running text in Archivo.</p>
+<img src="logo.png" alt="A hand torch side on, head to the left, body long, switch visible as a raised bar midway along the barrel, a deep red filter disc seated in its retaining ring over the lens, two small silver screws, and a narrow red spill pooling a short way below, with the name hand lettered below in the night watch log manner"><img src="banner.png" alt="A field at night: an observing table in the foreground with a chart weighted at its corners, an open eyepiece case, and one red torch laid across the chart with its spill pooling on the paper, the chart head carrying the only lettering, three telescopes with still observers in the midground and a second low red point at the far table, horizon, tree line, and a small crescent moon behind">
+<img src="scene.svg" alt="The field in three bands: stars holding their places while the crescent crosses a small fraction in the far band, a mount settling by a degree, an observer crossing to the chart table and back, and kettle steam rising and thinning in the middle band, the filtered torch switched on once and the chart corner lifting and settling in the near band"><div><button type="button">Name the Operation</button><button type="button">Time the HMAC Run</button><button type="button">Time the HKDF Run</button><button type="button">Time the Signing Run</button><button type="button">Time the AES Run</button><button type="button">Check the Log</button></div>
+<section><h2>Nothing Is Transmitted</h2><p>Correction of the name, at the head of the log, before anything else is timed. This program tests no rate limiter. It bypasses nothing. It sends no network request of any kind, to any address, at any point in any run. It generates its own keys and its own data inside its own process, runs one named operation in a timed loop on this one machine, and logs a total time and an average time. A reader who arrived expecting an attack on a limiter is told so here, in the first entry, at full size. The repo name is a name. It is not a description.</p></section>
+<section><h2>Installation</h2><p>The clone line is shown exactly as the README prints it, in the preserved record below. The wrong organisation stands inside the code block, and this note flags it in words: the install line and the licence line both carry a name that is not the organisation that holds this repo. A second note records the fact the README omits: the program imports the cryptography package, a requirements file in the repo names it with a minimum version of cryptography>=42.0.0, and the README gives no step that installs it.</p></section>
+<section><h2>Calling form</h2><p>Working form is python3 main.py, followed by --operation and one of its four choices, followed by any of the remaining controls the chosen operation uses. The operation is required. The parser refuses a run without it. No control on this program has a short form, the help control apart, and the log says so here because the placeholder in the README implies a shape it never gives.</p></section>
+<section><h2>Controls, logged in parser order</h2><p>Help, -h and --help, shows the help message and exits. Operation, --operation, takes hmac, hkdf, signature, or aes, is required, and the parser enforces the set. Iterations, --iterations, takes the count of timed passes and defaults to 100, a default the README omits. Key size, --key_size, takes a byte count and defaults to 32, and it serves the HMAC run and the AES run and no other. HKDF length, --hkdf_length, takes the output length for the HKDF run and defaults to 32. Signature algorithm, --signature_algorithm, takes ecdsa or rsa and defaults to ecdsa, a default the README omits. AES mode, --aes_mode, takes cbc or ctr and defaults to cbc, a default the README also omits.</p></section>
+<section><h2>Guards Before Timing</h2><p>Iterations below 1 ends the run with an error logged and a failure ending. HKDF length below 1 does the same. An AES run with a key size other than 16, 24, or 32 bytes does the same. An HMAC run with a key size below 1 byte does the same. These checks run after parsing and before any timing, so a refused run has no partial timing in its log, and a completed run has passed all four.</p></section>
+<section><h2>One Run Per Entry</h2><p>HMAC run: a fresh key of the stated byte size and a fixed short test message held in the code; each pass builds a new HMAC object over the SHA256 hash and finalises it, and the log records total seconds and the average per pass. HKDF run: a salt and input keying material drawn fresh at the start of that run and held fixed across every pass; each pass builds a new HKDF object over SHA256, with the requested output length and a fixed context label held in the code, and derives once, so every pass derives the same result. Signature run, two shapes: ECDSA generates a private key on the SECP256R1 curve and each pass signs the fixed test message and then verifies it; RSA generates a private key at 2048 bits and each pass signs with PSS padding and SHA256 and then verifies. AES run: a fresh key of the stated byte size and a fixed test plaintext repeated to length; the CBC shape pads the plaintext to the block under PKCS7 before timing begins, the CTR shape needs no padding, a new cipher context is built for every pass, the initialisation vector is drawn on the first pass and held fixed for the rest, and each pass encrypts and then decrypts. No digest, derived material, signature, key, plaintext, or ciphertext is printed in any run.</p></section>
+<section><h2>Judge a Run by Its Log</h2><p>A completed run ends with exit code 0. A failed run, or a run the guards refuse, ends with exit code 1. Parser refusals, a missing operation or a choice outside a named set, end the run before the program's own code begins. An average in a log is a property of this machine, this library build, and this loop, on this night, and it travels no further than that. Licence closes the log. The README gives a copyright line in the wrong name and names no licence. A separate licence file stands in the repo and is a MIT licence. Both facts are shown as they stand, and no holder line from that file is printed here.</p></section>
+<section><h2>Record preserved from the README</h2><pre>![Banner](banner.png)
 
-<main>
-  <section class="rail">
-    <nav aria-label="on this page">
-      <p class="mono"><a href="#run">Run it</a><br>
-      <a href="#files">The files</a><br>
-      <a href="#sheets">The sheets</a><br>
-      <a href="https://github.com/ShadowGuard-AI/crypto-rate-limiter-bypass-tester">The repo</a></p>
-    </nav>
-    <div>
-      <p class="lede">Each operation is timed over the requested iterations and the average is logged. The exit code is 0 when the selected operation completes and 1 when it fails or the arguments cannot produce a run (iterations below 1, an HKDF length below 1, or an AES key size other than 16, 24 or 32 bytes).</p>
-      <div class="grid">
-        <div class="card pop"><h3>What it is</h3>
-          <p>Crypto Rate Limiter Bypass Tester: 5 files, 250 counted
-          lines across Python 222, Markdown 27, Text 1. One job, done in the
-          open, in files you can read.</p></div>
-        <div class="card pop"><h3>The biggest piece</h3>
-          <p><code>main.py</code> carries the most
-          lines. If the project grows, that file is where the growth
-          lands first, for better or worse.</p></div>
-        <div class="card pop"><h3>The honest gap</h3>
-          <p>No test files yet. That is the honest gap, and the roadmap in the visuals folder says what the first one should cover.</p></div>
-      </div>
-      <section id="run">
-        <h2>Run it</h2>
-        <p>The repo README has the exact commands for this one. The
-        shape is the shape for most of my projects: clone it, read the
-        top file first so you know what will happen, then run it on
-        something you do not mind breaking.</p>
-        <p class="mono">$ git clone https://github.com/ShadowGuard-AI/crypto-rate-limiter-bypass-tester.git<br>$ cd crypto-rate-limiter-bypass-tester</p>
-      </section>
-      
-  <section aria-label="real code">
-    <h2>The code, as it sits in the repo</h2>
-    <p>From <code>main.py</code>, line 15 on. I did
-    not tidy it for the page. What you see is what the file has.</p>
-    <pre class="code"><code>logging.basicConfig(level=logging.INFO, format=&#x27;%(asctime)s - %(levelname)s - %(message)s&#x27;)
+# crypto-rate-limiter-bypass-tester
+A local timing benchmark for HMAC, HKDF, signature, and AES operations. It generates its own keys and data, runs the selected operation locally for the requested number of iterations, and logs the total and average time. It sends no network requests and tests no rate limiter. - Focused on Basic cryptographic operations
 
-def setup_argparse():
-    &quot;&quot;&quot;
-    Sets up the argument parser for the command-line interface.
-    &quot;&quot;&quot;
-    parser = argparse.ArgumentParser(description=&quot;Crypto Rate Limiter Bypass Tester&quot;)
-    parser.add_argument(&quot;--operation&quot;, choices=[&quot;hmac&quot;, &quot;hkdf&quot;, &quot;signature&quot;, &quot;aes&quot;], required=True,
-                        help=&quot;The cryptographic operation to test (hmac, hkdf, signature, aes).&quot;)
-    parser.add_argument(&quot;--iterations&quot;, type=int, default=100,
-                        help=&quot;The number of iterations to perform.  Higher numbers may trigger rate limiting.&quot;)
-    parser.add_argument(&quot;--key_size&quot;, type=int, default=32,
-                        help=&quot;The size of the key to use in bytes (default: 32).&quot;)  # For HMAC and AES
-    parser.add_argument(&quot;--hkdf_length&quot;, type=int, default=32,
-                        help=&quot;The length of the output for HKDF (default: 32).&quot;)
-    parser.add_argument(&quot;--signature_algorithm&quot;, choices=[&quot;ecdsa&quot;, &quot;rsa&quot;], default=&quot;ecdsa&quot;,
-                        help=&quot;The signature algorithm to use (ecdsa, rsa). Relevant for signature testing.&quot;)
-    parser.add_argument(&quot;--aes_mode&quot;, choices=[&quot;cbc&quot;, &quot;ctr&quot;], default=&quot;cbc&quot;,
-                        help=&quot;The AES mode of operation (cbc, ctr).  Relevant for AES testing&quot;)
-    return parser.parse_args()</code></pre>
-  </section>
-      <section id="files">
-        <h2>The files that matter</h2>
-        <table><tr><th>File</th><th>Lines</th></tr>
-        <tr><td><code>main.py</code></td><td>222</td></tr>
-        <tr><td><code>README.md</code></td><td>27</td></tr>
-        <tr><td><code>requirements.txt</code></td><td>1</td></tr>
-        <tr><td><code>banner.png</code></td><td>0</td></tr>
-        <tr><td><code>logo.png</code></td><td>0</td></tr>
-        </table>
-        <p>Names doing the work: <span class="mono">setup_argparse, test_hmac, test_hkdf, test_signature, test_aes, main</span>.</p>
-      </section>
-      <section id="sheets">
-        <h2>Drawn by hand</h2>
-        <p>I sketch my projects on notebook paper so I have to
-        understand them well enough to draw them. The full set,
-        with the counts and how they were counted, is the
-        <a href="https://github.com/ShadowGuard-AI/crypto-rate-limiter-bypass-tester/tree/main/crypto-rate-limiter-bypass-tester-Visuals">crypto-rate-limiter-bypass-tester-Visuals</a>
-        folder in the repo. Nothing is drawn over the binder holes.
-        That is a rule, not a style.</p>
-        <div class="shots">
-          <img src="assets/architecture.png" alt="Hand drawn architecture sheet for Crypto Rate Limiter Bypass Tester">
-          <img src="assets/flowchart.png" alt="Hand drawn flowchart sheet for Crypto Rate Limiter Bypass Tester">
-          <img src="assets/product-map.png" alt="Hand drawn product map sheet for Crypto Rate Limiter Bypass Tester">
-        </div>
-      </section>
-    </div>
-  </section>
-</main>
-<footer>
-  <p>Crypto Rate Limiter Bypass Tester is one of my projects. This page was written
-  from the repo itself on 2026-10-30: the counts are the
-  repo's counts, the code is the repo's code, and the gaps are the
-  repo's gaps.</p>
-</footer>
-</body>
-</html>
+## Install
+`git clone https://github.com/ShadowStrikeHQ/crypto-rate-limiter-bypass-tester`
+
+## Usage
+`python3 main.py [params]`
+
+Each operation is timed over the requested iterations and the average
+is logged. The exit code is 0 when the selected operation completes
+and 1 when it fails or the arguments cannot produce a run (iterations
+below 1, an HKDF length below 1, or an AES key size other than 16, 24
+or 32 bytes).
+
+## Parameters
+- `--operation`: The cryptographic operation to test (hmac, hkdf, signature, aes).
+- `--iterations`: The number of iterations to perform.
+- `--key_size`: The size of the key to use in bytes (default: 32).
+- `--hkdf_length`: The length of the output for HKDF (default: 32).
+- `--signature_algorithm`: The signature algorithm to use (ecdsa, rsa). Relevant for signature testing.
+- `--aes_mode`: The AES mode of operation (cbc, ctr).  Relevant for AES testing
+
+## License
+Copyright (c) ShadowStrikeHQ
+</pre></section>
+<section><h2>Facts from the code, stated in the prose</h2><p>Facts from the code, stated in the prose. This record names: --operation, hmac, hkdf, signature, aes, --iterations, --key_size, --hkdf_length, --signature_algorithm, ecdsa, rsa, --aes_mode, cbc, ctr, SHA256, SECP256R1, PSS, PKCS7, cryptography>=42.0.0, exit code 0, exit code 1. Defaults the README omits are stated here as code facts: iterations default 100, signature algorithm default ecdsa, AES mode default cbc. The key size and HKDF length defaults are both 32. The RSA shape uses a 2048 bit key. No key, signature, plaintext, or ciphertext is printed in any run, and nothing in this record prints one either.</p></section>
+</main></body></html>
